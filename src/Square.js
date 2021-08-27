@@ -1,25 +1,24 @@
-const Square = (props) => {
-  let color;
+import { useState } from "react";
 
-  switch (props.value) {
-    case 0:
-      color = "black";
-      break;
-    case 1:
-      color = "red";
-      break;
-    case 2:
-      color = "green";
-      break;
-    default:
-      color = "gray";
-      break;
+const Square = (props) => {
+  function renderColor() {
+    switch (props.value) {
+      case 0:
+        return "black";
+      case 1:
+        return "red";
+      case 2:
+        return "green";
+      default:
+        return "gray";
+    }
   }
+
   return (
     <button
       className="square"
-      onClick={() => props.onClick()}
-      style={{ backgroundColor: { color } }}
+      onMouseDown={() => props.onClick()}
+      style={{ backgroundColor: renderColor() }}
     />
   );
 };

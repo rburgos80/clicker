@@ -21,7 +21,7 @@
 }
 
 .square {
-  background: #999;
+  background-color: #999;
   float: left;
   font-weight: bold;
   height: 100px;
@@ -50,6 +50,23 @@
 
 .startButton:hover {
   background-color: #22bb42;
+  cursor: pointer;
+}
+
+.stopButton {
+  background-color: #e64327;
+  font-size: 32pt;
+  font-weight: bold;
+  font-family: "Courier New", Courier, monospace;
+  color: #282c34;
+  border: 0;
+  border-radius: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.stopButton:hover {
+  background-color: #ec2b2b;
   cursor: pointer;
 }
 

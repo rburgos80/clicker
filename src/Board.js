@@ -8,7 +8,7 @@ const Board = (props) => {
   let list = [];
   for (let i = 0; i < 5; i++) {
     list.push(
-      <div>
+      <div key={i}>
         {renderSquare(i * 5)}
         {renderSquare(i * 5 + 1)}
         {renderSquare(i * 5 + 2)}
