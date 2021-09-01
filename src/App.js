@@ -9,9 +9,9 @@ function App() {
   const [time, setTime] = useState(0);
   const [tick, setTick] = useState(0);
   const [score, setScore] = useState(0);
-  const maxTime = 5;
-  const levels = [3, 4, 5, 6, 8];
-  let timeouts = Array(25).fill(null);
+  const maxTime = 30;
+  const levels = [3, 4, 5, 6, 7];
+  // let timeouts = Array(25).fill(null);
 
   //Runs when the start button is pressed
   function handleStart() {
@@ -26,9 +26,11 @@ function App() {
     console.log("Game Started");
   }
 
+  //Runs when timer ends or stop is pressed
   function handleStop() {
     setStarted(false);
-    if (time != 0) {
+    setTick(0);
+    if (time !== 0) {
       setTime(0);
     }
     setSquares(squares.fill(null));
@@ -37,19 +39,24 @@ function App() {
 
   //Reset tick to appropriate number for each level
   function resetTick() {
-    let level = Math.floor((time / maxTime) * levels.length);
+    let level = Math.floor(
+      levels.length - 1 - (time / maxTime) * (levels.length - 1)
+    );
+    console.log(level);
     setTick(Math.floor(100 / levels[level]));
   }
 
   //Light squares when game starts
   function lightSquare() {
     if (!squares.includes(0)) {
-      console.log("no empty squares");
       return null;
     }
 
     let randomSquareIndex = Math.floor(Math.random() * 25);
-    while (squares[randomSquareIndex]) {
+    while (
+      squares[randomSquareIndex] === 1 ||
+      squares[randomSquareIndex] === null
+    ) {
       randomSquareIndex = Math.floor(Math.random() * 25);
     }
 
@@ -57,12 +64,11 @@ function App() {
       squares.map((s, index) => (randomSquareIndex === index ? 1 : s))
     );
 
-    console.log(squares);
-
     // timeouts[randomSquareIndex] = setTimeout(
-    //   setSquares(
-    //     squares.map((s, index) => (randomSquareIndex === index ? 0 : s))
-    //   ),
+    //   () =>
+    //     setSquares(
+    //       squares.map((s, index) => (randomSquareIndex === index ? 0 : s))
+    //     ),
     //   1000
     // );
   }
@@ -70,49 +76,39 @@ function App() {
   //Activate timer
   useEffect(() => {
     if (Math.floor(time > 0)) {
-      setTimeout(() => setTime((time) => time - 0.01), 10);
+      const timer = setTimeout(() => setTime((time) => time - 1), 1000);
+      return () => clearTimeout(timer);
     } else {
       setTime(0);
       handleStop();
     }
   }, [time]);
 
-  // useEffect(() => {
-  //   if (tick > 0 && started) {
-  //     setTimeout(
-  //       setTick((tick) => tick - 1),
-  //       10
-  //     );
-  //   } else {
-  //     lightSquare();
-  //     resetTick();
-  //   }
-  // }, [tick, started]);
-
-  // useEffect(() =>{
-  //   if (started){
-
-  //   }
-  //   else{
-  //     clearInterval
-  //   }
-  // }, [started]);
+  //Activate ticker
+  useEffect(() => {
+    if (tick > 0 && started) {
+      const timer = setTimeout(() => setTick((tick) => tick - 1), 10);
+      return () => clearTimeout(timer);
+    } else if (started) {
+      lightSquare();
+      resetTick();
+    }
+  }, [tick]);
 
   function handleClick(i) {
     if (!started) {
       return null;
     }
 
-    console.log("click");
     switch (squares[i]) {
       case 0:
-        setScore((score) => score - 5);
+        setScore((score) => score - 25);
         break;
+
+      //do this when a lit up square is clicked
       case 1:
         setScore((score) => score + 10);
-        setSquares(
-          squares.map((val, index) => (i === index ? 0 : squares[index]))
-        );
+        setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
         break;
       default:
         break;
