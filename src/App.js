@@ -10,8 +10,7 @@ function App() {
   const [tick, setTick] = useState(0);
   const [score, setScore] = useState(0);
   const maxTime = 30;
-  const levels = [4, 6, 8, 10, 12];
-  // let timeouts = Array(25).fill(null);
+  const levels = [4, 5, 6, 8, 10];
 
   //Runs when the start button is pressed
   function handleStart() {
@@ -37,15 +36,6 @@ function App() {
     console.log("Game stopped");
   }
 
-  //Reset tick to appropriate number for each level
-  function resetTick() {
-    let level = Math.floor(
-      levels.length - 1 - (time / maxTime) * (levels.length - 1)
-    );
-    console.log(level);
-    setTick(Math.floor(100 / levels[level]));
-  }
-
   //Light squares when game starts
   function lightSquare() {
     if (!squares.includes(0)) {
@@ -55,23 +45,30 @@ function App() {
 
     let randomSquareIndex = Math.floor(Math.random() * 25);
     while (
-      squares[randomSquareIndex] === 1 ||
+      squares[randomSquareIndex] !== 0 ||
       squares[randomSquareIndex] === null
     ) {
       randomSquareIndex = Math.floor(Math.random() * 25);
     }
 
     setSquares(
-      squares.map((s, index) => (randomSquareIndex === index ? 1 : s))
+      squares.map((s, index) => (randomSquareIndex === index ? 3 : s))
     );
+  }
 
-    // timeouts[randomSquareIndex] = setTimeout(
-    //   () =>
-    //     setSquares(
-    //       squares.map((s, index) => (randomSquareIndex === index ? 0 : s))
-    //     ),
-    //   1000
-    // );
+  //Decreases the value of squares over time
+  function decay(i) {
+    if (squares[i] !== null && squares[i]) {
+      if (squares[i] != 1) {
+        setSquares((squares) =>
+          squares.map((s, index) => (i === index ? s - 1 : s))
+        );
+      } else {
+        setSquares((squares) =>
+          squares.map((s, index) => (i === index ? null : s))
+        );
+      }
+    }
   }
 
   //Activate timer
@@ -96,20 +93,35 @@ function App() {
     }
   }, [tick]);
 
+  //Reset tick to appropriate number for each level
+  function resetTick() {
+    let level = Math.floor(
+      levels.length - 1 - (time / maxTime) * (levels.length - 1)
+    );
+    console.log(level);
+    setTick(Math.floor(100 / levels[level]));
+  }
+
+  //Updates score and board when a square is clicked
   function handleClick(i) {
     if (!started) {
       return null;
     }
-
     switch (squares[i]) {
       case 0:
-        setScore((score) => score - 25);
+        setScore((score) => score - 50);
         setSquares(squares.map((val, ind) => (i === ind ? null : val)));
         break;
-
-      //do this when a lit up square is clicked
       case 1:
+        setScore((score) => score + 5);
+        setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
+        break;
+      case 2:
         setScore((score) => score + 10);
+        setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
+        break;
+      case 3:
+        setScore((score) => score + 15);
         setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
         break;
       default:
@@ -122,6 +134,7 @@ function App() {
       <Header />
       <Board
         onClick={(i) => handleClick(i)}
+        decay={(i) => decay(i)}
         squares={squares}
         maxTime={maxTime}
         timer={time}

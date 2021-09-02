@@ -2,7 +2,13 @@ import Square from "./Square";
 
 const Board = (props) => {
   function renderSquare(i) {
-    return <Square value={props.squares[i]} onClick={() => props.onClick(i)} />;
+    return (
+      <Square
+        value={props.squares[i]}
+        decay={() => props.decay(i)}
+        onClick={() => props.onClick(i)}
+      />
+    );
   }
 
   let list = [];
