@@ -10,7 +10,7 @@ function App() {
   const [tick, setTick] = useState(0);
   const [score, setScore] = useState(0);
   const maxTime = 30;
-  const levels = [3, 4, 5, 6, 7];
+  const levels = [4, 6, 8, 10, 12];
   // let timeouts = Array(25).fill(null);
 
   //Runs when the start button is pressed
@@ -49,6 +49,7 @@ function App() {
   //Light squares when game starts
   function lightSquare() {
     if (!squares.includes(0)) {
+      handleStop();
       return null;
     }
 
@@ -103,6 +104,7 @@ function App() {
     switch (squares[i]) {
       case 0:
         setScore((score) => score - 25);
+        setSquares(squares.map((val, ind) => (i === ind ? null : val)));
         break;
 
       //do this when a lit up square is clicked

@@ -4,7 +4,7 @@ const Square = (props) => {
       case 0:
         return "black";
       case 1:
-        return "red";
+        return "Red";
       case 2:
         return "green";
       default:
