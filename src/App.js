@@ -10,7 +10,8 @@ function App() {
   const [tick, setTick] = useState(0);
   const [score, setScore] = useState(0);
   const maxTime = 30;
-  const levels = [4, 5, 6, 8, 10];
+  const levels = [3, 4, 5, 6, 6, 7, 8];
+  let victory = false;
 
   //Runs when the start button is pressed
   function handleStart() {
@@ -21,7 +22,8 @@ function App() {
     setTime(maxTime);
     setScore(0);
     resetTick();
-    setSquares(squares.fill(0));
+    victory = false;
+    setSquares((squares) => squares.fill(0));
     console.log("Game Started");
   }
 
@@ -32,7 +34,11 @@ function App() {
     if (time !== 0) {
       setTime(0);
     }
-    setSquares(squares.fill(null));
+    if (victory) {
+      setSquares((squares) => squares.fill(9));
+    } else {
+      setSquares((squares) => squares.fill(null));
+    }
     console.log("Game stopped");
   }
 
@@ -59,7 +65,7 @@ function App() {
   //Decreases the value of squares over time
   function decay(i) {
     if (squares[i] !== null && squares[i]) {
-      if (squares[i] != 1) {
+      if (squares[i] !== 1) {
         setSquares((squares) =>
           squares.map((s, index) => (i === index ? s - 1 : s))
         );
@@ -78,6 +84,7 @@ function App() {
       return () => clearTimeout(timer);
     } else {
       setTime(0);
+      victory = true;
       handleStop();
     }
   }, [time]);
@@ -98,7 +105,6 @@ function App() {
     let level = Math.floor(
       levels.length - 1 - (time / maxTime) * (levels.length - 1)
     );
-    console.log(level);
     setTick(Math.floor(100 / levels[level]));
   }
 
@@ -113,15 +119,15 @@ function App() {
         setSquares(squares.map((val, ind) => (i === ind ? null : val)));
         break;
       case 1:
-        setScore((score) => score + 5);
-        setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
-        break;
-      case 2:
         setScore((score) => score + 10);
         setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
         break;
-      case 3:
+      case 2:
         setScore((score) => score + 15);
+        setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
+        break;
+      case 3:
+        setScore((score) => score + 20);
         setSquares(squares.map((val, ind) => (i === ind ? 0 : val)));
         break;
       default:

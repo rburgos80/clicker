@@ -11,6 +11,8 @@ const Square = (props) => {
         return "orange";
       case 3:
         return "red";
+      case 9:
+        return "green";
       default:
         return "gray";
     }
@@ -32,7 +34,7 @@ const Square = (props) => {
         break;
     }
 
-    if (props.value !== null && props.value) {
+    if (props.value !== null && props.value <= 3 && props.value) {
       const timer = setTimeout(() => props.decay(), decayTime);
       return () => clearTimeout(timer);
     }
