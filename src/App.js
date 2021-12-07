@@ -1,7 +1,7 @@
 import Header from "./Header";
 import Board from "./Board";
 import HUD from "./HUD.js";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -10,8 +10,8 @@ function App() {
   const [tick, setTick] = useState(0);
   const [score, setScore] = useState(0);
   const maxTime = 30;
-  const levels = [3, 4, 5, 6, 6, 7, 8];
-  let victory = false;
+  const levels = [3, 4, 5, 6, 6, 7];
+  const victory = useRef(false);
 
   //Runs when the start button is pressed
   function handleStart() {
@@ -22,7 +22,7 @@ function App() {
     setTime(maxTime);
     setScore(0);
     resetTick();
-    victory = false;
+    victory.current = false;
     setSquares((squares) => squares.fill(0));
     console.log("Game Started");
   }
@@ -34,7 +34,7 @@ function App() {
     if (time !== 0) {
       setTime(0);
     }
-    if (victory) {
+    if (victory.current) {
       setSquares((squares) => squares.fill(9));
     } else {
       setSquares((squares) => squares.fill(null));
@@ -63,7 +63,7 @@ function App() {
   }
 
   //Decreases the value of squares over time
-  function decay(i) {
+  const decay = (i) => {
     if (squares[i] !== null && squares[i]) {
       if (squares[i] !== 1) {
         setSquares((squares) =>
@@ -75,19 +75,19 @@ function App() {
         );
       }
     }
-  }
+  };
 
   //Activate timer
   useEffect(() => {
     if (Math.floor(time > 0)) {
       const timer = setTimeout(() => setTime((time) => time - 1), 1000);
       return () => clearTimeout(timer);
-    } else {
+    } else if (started) {
       setTime(0);
-      victory = true;
+      victory.current = true;
       handleStop();
     }
-  }, [time]);
+  }, [time, started]);
 
   //Activate ticker
   useEffect(() => {
@@ -98,7 +98,7 @@ function App() {
       lightSquare();
       resetTick();
     }
-  }, [tick]);
+  }, [tick, started]);
 
   //Reset tick to appropriate number for each level
   function resetTick() {
@@ -146,7 +146,7 @@ function App() {
         timer={time}
       />
       <HUD
-        time={parseFloat((Math.round(time * 100) / 100).toFixed(2))}
+        time={time}
         score={score}
         started={started}
         handleStart={() => handleStart()}

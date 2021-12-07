@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-const Square = (props) => {
+const Square = ({ value, decay, onClick }) => {
   function renderColor() {
-    switch (props.value) {
+    switch (value) {
       case 0:
         return "black";
       case 1:
@@ -20,7 +20,7 @@ const Square = (props) => {
 
   useEffect(() => {
     let decayTime;
-    switch (props.value) {
+    switch (value) {
       case 3:
         decayTime = 750;
         break;
@@ -34,16 +34,16 @@ const Square = (props) => {
         break;
     }
 
-    if (props.value !== null && props.value <= 3 && props.value) {
-      const timer = setTimeout(() => props.decay(), decayTime);
+    if (value !== null && value <= 3 && value) {
+      const timer = setTimeout(() => decay(), decayTime);
       return () => clearTimeout(timer);
     }
-  }, [props.value]);
+  }, [value]);
 
   return (
     <button
       className="square"
-      onMouseDown={() => props.onClick()}
+      onMouseDown={() => onClick()}
       style={{ backgroundColor: renderColor() }}
     />
   );

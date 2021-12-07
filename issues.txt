@@ -1,7 +1,3 @@
 !Game stops multiple times on stop (4 on button, 2 on time out)
-!!!Squares don't light up
-!!Squares don't light green when your press them
-!!Squares stay forever when not pressed
 Timer and score move when button is pressed
-!!!Ticks not working correctly
 Too many functions on App.js
